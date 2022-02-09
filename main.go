@@ -80,11 +80,14 @@ func (s *fakeString) String() string {
 
 func PrintString(value interface{}) {
 	fmt.Printf("\n## type is %T = %v\n", value, value)
+	//switch value.(type) { // compare type instead of value
 	switch valueType := value.(type) { // compare type instead of value
 	case string:
 		fmt.Printf("- type %T = %v\n", valueType, valueType)
+		//fmt.Printf("- type %T = %v\n", value, value.(string))
 	case Stringer:
 		fmt.Printf("- type %T = %v, %v\n", valueType, valueType, valueType.String())
+		//fmt.Printf("- type %T = %v, %v\n", value, value, value.(Stringer).String())
 	default:
 		fmt.Printf("- Not support type %T = %v\n", value, value)
 	}
