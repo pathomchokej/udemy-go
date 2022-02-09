@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"log"
+	"os"
 )
 
 ////////////////////////////////////////////////////////////////
@@ -103,26 +104,86 @@ import (
 
 ////////////////////////////////////////////////////////////////////////
 // #4 struct fields
-type Point struct {
-	X, Y int
+// type Point struct {
+// 	X, Y int
+// }
+
+// var (
+// 	p = Point{1, 2}
+// 	q = &Point{1, 2}
+// 	r = Point{Y: 1}
+// 	s = Point{}
+// )
+
+// type BootCamp struct {
+// 	Lat, Lon float64
+// 	Date     time.Time
+// }
+
+// func main() {
+// 	fmt.Println(p, q, r, s)
+
+// 	event1 := &BootCamp{}
+// 	event2 := new(BootCamp)
+// 	fmt.Println(event1, " and ", event2, " : pointer check[event1 == event2 is ", event1 == event2, "] value check[*event1 == *event2 is ", *event1 == *event2, "]")
+// }
+
+////////////////////////////////////////////////////////////////////////
+// #5 composition struct
+type User struct {
+	ID             int
+	Name, Location string
 }
 
-var (
-	p = Point{1, 2}
-	q = &Point{1, 2}
-	r = Point{Y: 1}
-	s = Point{}
-)
+type Player struct {
+	User
+	GameID int
+}
 
-type BootCamp struct {
-	Lat, Lon float64
-	Date     time.Time
+type Player2 struct {
+	*User
+	GameID int
+}
+
+func (u *User) Greeting() string {
+	return fmt.Sprintf("Hi %s from %s", u.Name, u.Location)
+}
+
+type Job struct {
+	Command string
+	Logger  *log.Logger
+}
+
+type Job2 struct {
+	Command string
+	*log.Logger
 }
 
 func main() {
-	fmt.Println(p, q, r, s)
+	player := Player{
+		User:   User{ID: 0, Name: "Matt", Location: "LA"},
+		GameID: 10,
+	}
+	fmt.Printf("Player : %+v\n", player)
+	fmt.Printf("ID %d, Name: %s, Location: %s, GameID: %d\n", player.ID, player.Name, player.Location, player.GameID)
+	fmt.Println(player.Greeting())
 
-	event1 := &BootCamp{}
-	event2 := new(BootCamp)
-	fmt.Println(event1, " and ", event2, " : pointer check[event1 == event2 is ", event1 == event2, "] value check[*event1 == *event2 is ", *event1 == *event2, "]")
+	player2 := Player2{
+		&User{ID: 0, Name: "John", Location: "USA"},
+		219,
+	}
+	fmt.Printf("Player2 : %+v\n", player2)
+	fmt.Printf("ID %d, Name: %s, Location: %s, GameID: %d\n", player2.ID, player2.Name, player2.Location, player2.GameID)
+	fmt.Println(player2.Greeting())
+
+	job := Job{"demo", log.New(os.Stderr, "Job: ", log.Ldate)}
+	fmt.Printf("Job : %+v\n", job)
+	job.Logger.Printf("test")
+
+	job2 := Job2{}
+	fmt.Printf("Job2 : %+v\n", job2)
+	job2.Logger = log.New(os.Stderr, "Job: ", log.Ldate)
+	job2.Command = "demo2"
+	fmt.Printf("Job2 : %+v\n", job2)
+	job2.Printf("test2")
 }
