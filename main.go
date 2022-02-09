@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 ////////////////////////////////////////////////////////////////
@@ -65,37 +66,63 @@ import (
 
 ////////////////////////////////////////////////////////////////////////
 // #3 test implement inferface
-type Stringer interface {
-	String() string
+// type Stringer interface {
+// 	String() string
+// }
+
+// type fakeString struct {
+// 	content string
+// }
+
+// // implement Stringer interface to fakeString
+// func (s *fakeString) String() string {
+// 	return s.content
+// }
+
+// func PrintString(value interface{}) {
+// 	fmt.Printf("\n## type is %T = %v\n", value, value)
+// 	//switch value.(type) { // compare type instead of value
+// 	switch valueType := value.(type) { // compare type instead of value
+// 	case string:
+// 		fmt.Printf("- type %T = %v\n", valueType, valueType)
+// 		//fmt.Printf("- type %T = %v\n", value, value.(string))
+// 	case Stringer:
+// 		fmt.Printf("- type %T = %v, %v\n", valueType, valueType, valueType.String())
+// 		//fmt.Printf("- type %T = %v, %v\n", value, value, value.(Stringer).String())
+// 	default:
+// 		fmt.Printf("- Not support type %T = %v\n", value, value)
+// 	}
+// }
+
+// func main() {
+// 	s := fakeString{"string in struct fakeString"}
+// 	PrintString(s)
+// 	PrintString(&s)
+// 	PrintString("string directly")
+// }
+
+////////////////////////////////////////////////////////////////////////
+// #4 struct fields
+type Point struct {
+	X, Y int
 }
 
-type fakeString struct {
-	content string
-}
+var (
+	p = Point{1, 2}
+	q = &Point{1, 2}
+	r = Point{Y: 1}
+	s = Point{}
+)
 
-// implement Stringer interface to fakeString
-func (s *fakeString) String() string {
-	return s.content
-}
-
-func PrintString(value interface{}) {
-	fmt.Printf("\n## type is %T = %v\n", value, value)
-	//switch value.(type) { // compare type instead of value
-	switch valueType := value.(type) { // compare type instead of value
-	case string:
-		fmt.Printf("- type %T = %v\n", valueType, valueType)
-		//fmt.Printf("- type %T = %v\n", value, value.(string))
-	case Stringer:
-		fmt.Printf("- type %T = %v, %v\n", valueType, valueType, valueType.String())
-		//fmt.Printf("- type %T = %v, %v\n", value, value, value.(Stringer).String())
-	default:
-		fmt.Printf("- Not support type %T = %v\n", value, value)
-	}
+type BootCamp struct {
+	Lat, Lon float64
+	Date     time.Time
 }
 
 func main() {
-	s := fakeString{"string in struct fakeString"}
-	PrintString(s)
-	PrintString(&s)
-	PrintString("string directly")
+	fmt.Println(p, q, r, s)
+
+	event1 := &BootCamp{}
+	event2 := new(BootCamp)
+	fmt.Println(event1, " and ", event2, " : pointer check[event1 == event2 is ", event1 == event2, "] value check[*event1 == *event2 is ", *event1 == *event2, "]")
 }
