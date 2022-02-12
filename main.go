@@ -1,10 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"os"
-)
+import "fmt"
 
 ////////////////////////////////////////////////////////////////
 // #1 Basic
@@ -130,60 +126,136 @@ import (
 
 ////////////////////////////////////////////////////////////////////////
 // #5 composition struct
-type User struct {
-	ID             int
-	Name, Location string
-}
+// type User struct {
+// 	ID             int
+// 	Name, Location string
+// }
 
-type Player struct {
-	User
-	GameID int
-}
+// type Player struct {
+// 	User
+// 	GameID int
+// }
 
-type Player2 struct {
-	*User
-	GameID int
-}
+// type Player2 struct {
+// 	*User
+// 	GameID int
+// }
 
-func (u *User) Greeting() string {
-	return fmt.Sprintf("Hi %s from %s", u.Name, u.Location)
-}
+// func (u *User) Greeting() string {
+// 	return fmt.Sprintf("Hi %s from %s", u.Name, u.Location)
+// }
 
-type Job struct {
-	Command string
-	Logger  *log.Logger
-}
+// type Job struct {
+// 	Command string
+// 	Logger  *log.Logger
+// }
 
-type Job2 struct {
-	Command string
-	*log.Logger
-}
+// type Job2 struct {
+// 	Command string
+// 	*log.Logger
+// }
 
+// func main() {
+// 	player := Player{
+// 		User:   User{ID: 0, Name: "Matt", Location: "LA"},
+// 		GameID: 10,
+// 	}
+// 	fmt.Printf("Player : %+v\n", player)
+// 	fmt.Printf("ID %d, Name: %s, Location: %s, GameID: %d\n", player.ID, player.Name, player.Location, player.GameID)
+// 	fmt.Println(player.Greeting())
+
+// 	player2 := Player2{
+// 		&User{ID: 0, Name: "John", Location: "USA"},
+// 		219,
+// 	}
+// 	fmt.Printf("Player2 : %+v\n", player2)
+// 	fmt.Printf("ID %d, Name: %s, Location: %s, GameID: %d\n", player2.ID, player2.Name, player2.Location, player2.GameID)
+// 	fmt.Println(player2.Greeting())
+
+// 	job := Job{"demo", log.New(os.Stderr, "Job: ", log.Ldate)}
+// 	fmt.Printf("Job : %+v\n", job)
+// 	job.Logger.Printf("test")
+
+// 	job2 := Job2{}
+// 	fmt.Printf("Job2 : %+v\n", job2)
+// 	job2.Logger = log.New(os.Stderr, "Job: ", log.Ldate)
+// 	job2.Command = "demo2"
+// 	fmt.Printf("Job2 : %+v\n", job2)
+// 	job2.Printf("test2")
+// }
+
+//////////////////////////////////
+// #6 Collection Types
+
+// func main() {
+// 	var a [2]string
+// 	a[0] = "hello"
+// 	a[1] = "world"
+
+// 	fmt.Println(a[0], a[1])
+// 	fmt.Println(a)
+
+// 	b := [...]string{"hello", "world2", "3", "4", "5", "6", "7"}
+// 	fmt.Println(b)
+// 	fmt.Printf("%q \n", b)
+// 	fmt.Println(b[1:4])
+
+// 	var c [2][3]string
+// 	for col := 0; col < 2; col++ {
+// 		for row := 0; row < 3; row++ {
+// 			c[col][row] = fmt.Sprintf("C%d,R%d", col, row)
+// 		}
+// 	}
+// 	fmt.Printf("%q \n", c)
+
+// 	d := [][]string{{"1", "2", "3"}, {"4", "5", "6", "7"}}
+// 	fmt.Printf("%q \n", d)
+
+// 	arr1 := []string{"1", "2", "3", "4", "5"}
+// 	arr2 := []string{"4", "5", "6", "7"}
+// 	fmt.Printf("%q \n", arr1)
+// 	arr3 := append(arr1, arr2...)
+// 	fmt.Printf("%q \n", arr3)
+// }
+
+////////////////////////////////
+// #7 range and map
 func main() {
-	player := Player{
-		User:   User{ID: 0, Name: "Matt", Location: "LA"},
-		GameID: 10,
+	arr1 := []string{"1", "2", "3", "4", "5"}
+	for index, value := range arr1 {
+		fmt.Printf("[%d] value is %s \n", index, value)
 	}
-	fmt.Printf("Player : %+v\n", player)
-	fmt.Printf("ID %d, Name: %s, Location: %s, GameID: %d\n", player.ID, player.Name, player.Location, player.GameID)
-	fmt.Println(player.Greeting())
+	fmt.Println("================================")
 
-	player2 := Player2{
-		&User{ID: 0, Name: "John", Location: "USA"},
-		219,
+	for index := range arr1 {
+		fmt.Printf("[%d] value is %s \n", index, arr1[index])
 	}
-	fmt.Printf("Player2 : %+v\n", player2)
-	fmt.Printf("ID %d, Name: %s, Location: %s, GameID: %d\n", player2.ID, player2.Name, player2.Location, player2.GameID)
-	fmt.Println(player2.Greeting())
+	fmt.Println("================================")
 
-	job := Job{"demo", log.New(os.Stderr, "Job: ", log.Ldate)}
-	fmt.Printf("Job : %+v\n", job)
-	job.Logger.Printf("test")
+	for _, value := range arr1 {
+		fmt.Printf("value is %s \n", value)
+	}
+	fmt.Println("================================")
 
-	job2 := Job2{}
-	fmt.Printf("Job2 : %+v\n", job2)
-	job2.Logger = log.New(os.Stderr, "Job: ", log.Ldate)
-	job2.Command = "demo2"
-	fmt.Printf("Job2 : %+v\n", job2)
-	job2.Printf("test2")
+	phoneNumber := map[string]int{
+		"KFC":       1112,
+		"PIZZA HUT": 1150,
+		"HOME":      0,
+	}
+
+	for key, value := range phoneNumber {
+		fmt.Printf("[%s]value is %d \n", key, value)
+	}
+	fmt.Println("================================")
+
+	for key := range phoneNumber {
+		fmt.Printf("[%s]value is %d \n", key, phoneNumber[key])
+	}
+	fmt.Println("================================")
+
+	for _, value := range phoneNumber {
+		fmt.Printf("value is %d \n", value)
+	}
+	fmt.Println("================================")
+
 }
