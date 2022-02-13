@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 ////////////////////////////////////////////////////////////////
@@ -327,44 +326,42 @@ var (
 	distribution = make(map[string]int, len(users))
 )
 
+func EarnCoin(user string) int {
+	length := len(user)
+	var coin = 0
+	for i := 0; i < length; i++ {
+		// number of coin can eurn
+		switch user[i] {
+		case 'a', 'e', 'A', 'E':
+			coin++
+		case 'i':
+			coin += 2
+		case 'o':
+			coin += 3
+		case 'u':
+			coin += 4
+		}
+	}
+
+	if coin < 10 {
+		return coin
+	} else {
+		return 10
+	}
+}
+
 func main() {
 
 	for _, user := range users {
 
-		length := len(user)
-		lowercaseUser := strings.ToLower(user)
-		for i := 0; i < length; i++ {
-			// number of coin can eurn
-			var coin = 0
-			switch lowercaseUser[i] {
-			case 'a', 'e':
-				coin = 1
-			case 'i':
-				coin = 2
-			case 'o':
-				coin = 3
-			case 'u':
-				coin = 4
-			}
-
-			// validate max coin can earn
-			maxEarn := 10 - distribution[user]
-			if coin > maxEarn {
-				coin = maxEarn
-			}
-
-			// validate exist coins
-			if coins < coin {
-				coin = coins
-			}
-
-			distribution[user] += coin
-			coins -= coin
-
-			if distribution[user] >= 10 || coins <= 0 {
-				break
-			}
+		coin := EarnCoin(user)
+		// validate exist coins
+		if coins < coin {
+			coin = coins
 		}
+
+		distribution[user] += coin
+		coins -= coin
 
 		if coins <= 0 {
 			break
