@@ -220,42 +220,77 @@ import "fmt"
 
 ////////////////////////////////
 // #7 range and map
+// func main() {
+// 	arr1 := []string{"1", "2", "3", "4", "5"}
+// 	for index, value := range arr1 {
+// 		fmt.Printf("[%d] value is %s \n", index, value)
+// 	}
+// 	fmt.Println("================================")
+
+// 	for index := range arr1 {
+// 		fmt.Printf("[%d] value is %s \n", index, arr1[index])
+// 	}
+// 	fmt.Println("================================")
+
+// 	for _, value := range arr1 {
+// 		fmt.Printf("value is %s \n", value)
+// 	}
+// 	fmt.Println("================================")
+
+// 	phoneNumber := map[string]int{
+// 		"KFC":       1112,
+// 		"PIZZA HUT": 1150,
+// 		"HOME":      0,
+// 	}
+
+// 	for key, value := range phoneNumber {
+// 		fmt.Printf("[%s]value is %d \n", key, value)
+// 	}
+// 	fmt.Println("================================")
+
+// 	for key := range phoneNumber {
+// 		fmt.Printf("[%s]value is %d \n", key, phoneNumber[key])
+// 	}
+// 	fmt.Println("================================")
+
+// 	for _, value := range phoneNumber {
+// 		fmt.Printf("value is %d \n", value)
+// 	}
+// 	fmt.Println("================================")
+
+// }
+
+var names = []string{"Katrina", "Evan", "Neil", "Adam", "Martin", "Matt",
+	"Emma", "Isabella", "Emily", "Madison",
+	"Ava", "Olivia", "Sophia", "Abigail",
+	"Elizabeth", "Chloe", "Samantha",
+	"Addison", "Natalie", "Mia", "Alexis"}
+
+var test = map[string]int{
+	"a": 1,
+	//"a": 2,
+	"b": 3,
+}
+
 func main() {
-	arr1 := []string{"1", "2", "3", "4", "5"}
-	for index, value := range arr1 {
-		fmt.Printf("[%d] value is %s \n", index, value)
-	}
-	fmt.Println("================================")
 
-	for index := range arr1 {
-		fmt.Printf("[%d] value is %s \n", index, arr1[index])
-	}
-	fmt.Println("================================")
+	var result = map[int][]string{}
 
-	for _, value := range arr1 {
-		fmt.Printf("value is %s \n", value)
+	var maxLength int = 0
+	for _, name := range names {
+		length := len(name)
+		result[length] = append(result[length], name)
+		if maxLength < length {
+			maxLength = length
+		}
 	}
-	fmt.Println("================================")
+	fmt.Printf("%#v\n\n", result)
+	// %v is map[3:[Ava Mia] 4:[Evan Neil Adam Matt Emma] 5:[Emily Chloe] 6:[Martin Olivia Sophia Alexis] 7:[Katrina Madison Abigail Addison Natalie] 8:[Isabella Samantha] 9:[Elizabeth]]
+	// %#v is map[int][]string{3:[]string{"Ava", "Mia"}, 4:[]string{"Evan", "Neil", "Adam", "Matt", "Emma"}, 5:[]string{"Emily", "Chloe"}, 6:[]string{"Martin", "Olivia", "Sophia", "Alexis"}, 7:[]string{"Katrina", "Madison", "Abigail", "Addison", "Natalie"}, 8:[]string{"Isabella", "Samantha"}, 9:[]string{"Elizabeth"}}
 
-	phoneNumber := map[string]int{
-		"KFC":       1112,
-		"PIZZA HUT": 1150,
-		"HOME":      0,
+	var result2 = make([][]string, maxLength)
+	for nameLength, categories := range result {
+		result2[nameLength-1] = append(result2[nameLength-1], categories...)
 	}
-
-	for key, value := range phoneNumber {
-		fmt.Printf("[%s]value is %d \n", key, value)
-	}
-	fmt.Println("================================")
-
-	for key := range phoneNumber {
-		fmt.Printf("[%s]value is %d \n", key, phoneNumber[key])
-	}
-	fmt.Println("================================")
-
-	for _, value := range phoneNumber {
-		fmt.Printf("value is %d \n", value)
-	}
-	fmt.Println("================================")
-
+	fmt.Printf("%#v\n\n", result2)
 }
