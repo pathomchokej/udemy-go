@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 ////////////////////////////////////////////////////////////////
 // #1 Basic
@@ -260,37 +263,54 @@ import "fmt"
 
 // }
 
-var names = []string{"Katrina", "Evan", "Neil", "Adam", "Martin", "Matt",
-	"Emma", "Isabella", "Emily", "Madison",
-	"Ava", "Olivia", "Sophia", "Abigail",
-	"Elizabeth", "Chloe", "Samantha",
-	"Addison", "Natalie", "Mia", "Alexis"}
+// var names = []string{"Katrina", "Evan", "Neil", "Adam", "Martin", "Matt",
+// 	"Emma", "Isabella", "Emily", "Madison",
+// 	"Ava", "Olivia", "Sophia", "Abigail",
+// 	"Elizabeth", "Chloe", "Samantha",
+// 	"Addison", "Natalie", "Mia", "Alexis"}
 
-var test = map[string]int{
-	"a": 1,
-	//"a": 2,
-	"b": 3,
+// var test = map[string]int{
+// 	"a": 1,
+// 	//"a": 2,
+// 	"b": 3,
+// }
+
+// func main() {
+
+// 	var result = map[int][]string{}
+
+// 	var maxLength int = 0
+// 	for _, name := range names {
+// 		length := len(name)
+// 		result[length] = append(result[length], name)
+// 		if maxLength < length {
+// 			maxLength = length
+// 		}
+// 	}
+// 	fmt.Printf("%#v\n\n", result)
+// 	// %v is map[3:[Ava Mia] 4:[Evan Neil Adam Matt Emma] 5:[Emily Chloe] 6:[Martin Olivia Sophia Alexis] 7:[Katrina Madison Abigail Addison Natalie] 8:[Isabella Samantha] 9:[Elizabeth]]
+// 	// %#v is map[int][]string{3:[]string{"Ava", "Mia"}, 4:[]string{"Evan", "Neil", "Adam", "Matt", "Emma"}, 5:[]string{"Emily", "Chloe"}, 6:[]string{"Martin", "Olivia", "Sophia", "Alexis"}, 7:[]string{"Katrina", "Madison", "Abigail", "Addison", "Natalie"}, 8:[]string{"Isabella", "Samantha"}, 9:[]string{"Elizabeth"}}
+
+// 	var result2 = make([][]string, maxLength)
+// 	for nameLength, categories := range result {
+// 		result2[nameLength-1] = append(result2[nameLength-1], categories...)
+// 	}
+// 	fmt.Printf("%#v\n\n", result2)
+// }
+
+var lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+func WordCount(s string) map[string]int {
+	words := strings.Fields(s)
+	result := make(map[string]int)
+	for _, word := range words {
+		result[word]++
+	}
+
+	return result
 }
 
 func main() {
-
-	var result = map[int][]string{}
-
-	var maxLength int = 0
-	for _, name := range names {
-		length := len(name)
-		result[length] = append(result[length], name)
-		if maxLength < length {
-			maxLength = length
-		}
-	}
-	fmt.Printf("%#v\n\n", result)
-	// %v is map[3:[Ava Mia] 4:[Evan Neil Adam Matt Emma] 5:[Emily Chloe] 6:[Martin Olivia Sophia Alexis] 7:[Katrina Madison Abigail Addison Natalie] 8:[Isabella Samantha] 9:[Elizabeth]]
-	// %#v is map[int][]string{3:[]string{"Ava", "Mia"}, 4:[]string{"Evan", "Neil", "Adam", "Matt", "Emma"}, 5:[]string{"Emily", "Chloe"}, 6:[]string{"Martin", "Olivia", "Sophia", "Alexis"}, 7:[]string{"Katrina", "Madison", "Abigail", "Addison", "Natalie"}, 8:[]string{"Isabella", "Samantha"}, 9:[]string{"Elizabeth"}}
-
-	var result2 = make([][]string, maxLength)
-	for nameLength, categories := range result {
-		result2[nameLength-1] = append(result2[nameLength-1], categories...)
-	}
-	fmt.Printf("%#v\n\n", result2)
+	result := WordCount(lorem)
+	fmt.Printf("%#v", result)
 }
