@@ -375,59 +375,90 @@ import (
 ////////////////////////////////
 // #9 interface
 
-type User struct {
-	FirstName, LastName string
+// type User struct {
+// 	FirstName, LastName string
+// }
+
+// type Admin struct {
+// 	FirstName, LastName string
+// }
+
+// func (user *User) Greeting() string {
+// 	return fmt.Sprintf("Hi %s: %s", user.FirstName, user.LastName)
+// }
+
+// func (user *Admin) Greeting() string {
+// 	return fmt.Sprintf("Hello %s: %s", user.FirstName, user.LastName)
+// }
+
+// type MyString string
+
+// type UserFunc interface {
+// 	Greeting() string
+// }
+
+// func Greet(u UserFunc) string {
+// 	return fmt.Sprintf("%s!!!", u.Greeting())
+// }
+
+// func Greet2(i interface{}) string {
+// 	switch value := i.(type) {
+
+// 	case string:
+// 		return fmt.Sprintf("String is %#v", value)
+
+// 	case MyString:
+// 		return fmt.Sprintf("MyString is %#v", value)
+
+// 	case UserFunc:
+// 		return Greet(value)
+
+// 	default:
+// 		return "unknown type : %#v"
+// 	}
+// }
+
+// func main() {
+// 	u := &User{"PA", "JA"}
+// 	a := &Admin{"PAAA", "JAROON"}
+// 	test := MyString("test")
+// 	fmt.Println(Greet(u))
+// 	fmt.Println(Greet(a))
+// 	fmt.Println("================================================================")
+// 	fmt.Println(Greet2("NN DD"))
+// 	fmt.Println(Greet2(u))
+// 	fmt.Println(Greet2(test))
+// 	fmt.Println(Greet2(a))
+// 	fmt.Println("================================================================")
+// }
+
+type Reader interface {
+	Read(b []byte) (n int, err error)
 }
 
-type Admin struct {
-	FirstName, LastName string
+type Writer interface {
+	Write(b []byte) (n int, err error)
 }
 
-func (user *User) Greeting() string {
-	return fmt.Sprintf("Hi %s: %s", user.FirstName, user.LastName)
+type ReadWriter interface {
+	Reader
+	Writer
 }
 
-func (user *Admin) Greeting() string {
-	return fmt.Sprintf("Hello %s: %s", user.FirstName, user.LastName)
-}
+type ErrNegativeSqrt float64
 
-type MyString string
-
-type UserFunc interface {
-	Greeting() string
-}
-
-func Greet(u UserFunc) string {
-	return fmt.Sprintf("%s!!!", u.Greeting())
-}
-
-func Greet2(i interface{}) string {
-	switch value := i.(type) {
-
-	case string:
-		return fmt.Sprintf("String is %#v", value)
-
-	case MyString:
-		return fmt.Sprintf("MyString is %#v", value)
-
-	case UserFunc:
-		return Greet(value)
-
-	default:
-		return "unknown type : %#v"
-	}
+func (e ErrNegativeSqrt) Error() string {
+	return fmt.Sprintf("cannot Sqrt negative number : %g!!!", e)
 }
 
 func main() {
-	u := &User{"PA", "JA"}
-	a := &Admin{"PAAA", "JAROON"}
-	test := MyString("test")
-	fmt.Println(Greet(u))
-	fmt.Println(Greet(a))
-	fmt.Println("================================================================")
-	fmt.Println(Greet2("NN DD"))
-	fmt.Println(Greet2(u))
-	fmt.Println(Greet2(test))
-	fmt.Println(Greet2(a))
-	fmt.Println("================================================================")
+	// var w Writer
+
+	// // os.Stdout implements Writer
+	// w = os.Stdout
+	// //os.Stdout.Read()
+
+	// fmt.Fprintf(w, "hello, writer\n")
+
+	fmt.Println(ErrNegativeSqrt(-2))
 }
