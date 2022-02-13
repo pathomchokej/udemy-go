@@ -298,19 +298,79 @@ import (
 // 	fmt.Printf("%#v\n\n", result2)
 // }
 
-var lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+// var lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
-func WordCount(s string) map[string]int {
-	words := strings.Fields(s)
-	result := make(map[string]int)
-	for _, word := range words {
-		result[word]++
+// func WordCount(s string) map[string]int {
+// 	words := strings.Fields(s)
+// 	result := make(map[string]int)
+// 	for _, word := range words {
+// 		result[word]++
+// 	}
+
+// 	return result
+// }
+
+// func main() {
+// 	result := WordCount(lorem)
+// 	fmt.Printf("%#v", result)
+// }
+
+//////////////////////////////////
+// #8 switch cases
+
+var (
+	coins = 50
+	users = []string{
+		"Matthew", "Sarah", "Augustus", "Heidi", "Emilie",
+		"Peter", "Giana", "Adriano", "Aaron", "Elizabeth",
 	}
-
-	return result
-}
+	distribution = make(map[string]int, len(users))
+)
 
 func main() {
-	result := WordCount(lorem)
-	fmt.Printf("%#v", result)
+
+	for _, user := range users {
+
+		length := len(user)
+		lowercaseUser := strings.ToLower(user)
+		for i := 0; i < length; i++ {
+			// number of coin can eurn
+			var coin = 0
+			switch lowercaseUser[i] {
+			case 'a', 'e':
+				coin = 1
+			case 'i':
+				coin = 2
+			case 'o':
+				coin = 3
+			case 'u':
+				coin = 4
+			}
+
+			// validate max coin can earn
+			maxEarn := 10 - distribution[user]
+			if coin > maxEarn {
+				coin = maxEarn
+			}
+
+			// validate exist coins
+			if coins < coin {
+				coin = coins
+			}
+
+			distribution[user] += coin
+			coins -= coin
+
+			if distribution[user] >= 10 || coins <= 0 {
+				break
+			}
+		}
+
+		if coins <= 0 {
+			break
+		}
+	}
+
+	fmt.Println(distribution)
+	fmt.Println("Coins left:", coins)
 }
