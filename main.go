@@ -317,57 +317,117 @@ import (
 //////////////////////////////////
 // #8 switch cases
 
-var (
-	coins = 50
-	users = []string{
-		"Matthew", "Sarah", "Augustus", "Heidi", "Emilie",
-		"Peter", "Giana", "Adriano", "Aaron", "Elizabeth",
-	}
-	distribution = make(map[string]int, len(users))
-)
+// var (
+// 	coins = 50
+// 	users = []string{
+// 		"Matthew", "Sarah", "Augustus", "Heidi", "Emilie",
+// 		"Peter", "Giana", "Adriano", "Aaron", "Elizabeth",
+// 	}
+// 	distribution = make(map[string]int, len(users))
+// )
 
-func EarnCoin(user string) int {
-	length := len(user)
-	var coin = 0
-	for i := 0; i < length; i++ {
-		// number of coin can eurn
-		switch user[i] {
-		case 'a', 'e', 'A', 'E':
-			coin++
-		case 'i':
-			coin += 2
-		case 'o':
-			coin += 3
-		case 'u':
-			coin += 4
-		}
-	}
+// func EarnCoin(user string) int {
+// 	length := len(user)
+// 	var coin = 0
+// 	for i := 0; i < length; i++ {
+// 		// number of coin can eurn
+// 		switch user[i] {
+// 		case 'a', 'e', 'A', 'E':
+// 			coin++
+// 		case 'i':
+// 			coin += 2
+// 		case 'o':
+// 			coin += 3
+// 		case 'u':
+// 			coin += 4
+// 		}
+// 	}
 
-	if coin < 10 {
-		return coin
-	} else {
-		return 10
+// 	if coin < 10 {
+// 		return coin
+// 	} else {
+// 		return 10
+// 	}
+// }
+
+// func main() {
+
+// 	for _, user := range users {
+
+// 		coin := EarnCoin(user)
+// 		// validate exist coins
+// 		if coins < coin {
+// 			coin = coins
+// 		}
+
+// 		distribution[user] += coin
+// 		coins -= coin
+
+// 		if coins <= 0 {
+// 			break
+// 		}
+// 	}
+
+// 	fmt.Println(distribution)
+// 	fmt.Println("Coins left:", coins)
+// }
+
+////////////////////////////////
+// #9 interface
+
+type User struct {
+	FirstName, LastName string
+}
+
+type Admin struct {
+	FirstName, LastName string
+}
+
+func (user *User) Greeting() string {
+	return fmt.Sprintf("Hi %s: %s", user.FirstName, user.LastName)
+}
+
+func (user *Admin) Greeting() string {
+	return fmt.Sprintf("Hello %s: %s", user.FirstName, user.LastName)
+}
+
+type MyString string
+
+type UserFunc interface {
+	Greeting() string
+}
+
+func Greet(u UserFunc) string {
+	return fmt.Sprintf("%s!!!", u.Greeting())
+}
+
+func Greet2(i interface{}) string {
+	switch value := i.(type) {
+
+	case string:
+		return fmt.Sprintf("String is %#v", value)
+
+	case MyString:
+		return fmt.Sprintf("MyString is %#v", value)
+
+	case UserFunc:
+		return Greet(value)
+
+	default:
+		return "unknown type : %#v"
 	}
 }
 
 func main() {
-
-	for _, user := range users {
-
-		coin := EarnCoin(user)
-		// validate exist coins
-		if coins < coin {
-			coin = coins
-		}
-
-		distribution[user] += coin
-		coins -= coin
-
-		if coins <= 0 {
-			break
-		}
-	}
-
-	fmt.Println(distribution)
-	fmt.Println("Coins left:", coins)
+	u := &User{"PA", "JA"}
+	a := &Admin{"PAAA", "JAROON"}
+	test := MyString("test")
+	fmt.Println(Greet(u))
+	fmt.Println(Greet(a))
+	fmt.Println("================================================================")
+	fmt.Println(Greet2("NN DD"))
+	fmt.Println(Greet2(u))
+	fmt.Println(Greet2(test))
+	fmt.Println(Greet2(a))
+	fmt.Println("================================================================")
 }
