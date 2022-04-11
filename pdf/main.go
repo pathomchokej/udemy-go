@@ -154,7 +154,7 @@ func fillOutEndorsementPdf(pdfTemplate []byte, effectiveDate, currentVersion str
 
 		tpl := imp.ImportPageFromStream(pdf, &rs, i, "/MediaBox")
 
-		//pdf.AddPageFormat("P", sizeType)
+		pdf.AddPageFormat("P", sizeType)
 		imp.UseImportedTemplate(pdf, tpl, 0, 0, pageSizes[i]["/MediaBox"]["w"], pageSizes[i]["/MediaBox"]["h"])
 
 		// 	if i == 9 {
