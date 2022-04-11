@@ -11,6 +11,9 @@ import (
 
 	"github.com/phpdave11/gofpdf"
 	"github.com/phpdave11/gofpdf/contrib/gofpdi"
+
+	"github.com/pdfcpu/pdfcpu/pkg/api"
+	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
 )
 
 type Reader interface {
@@ -60,7 +63,7 @@ func main() {
 		fmt.Println("Open ", targetFile, " failed :", err)
 		panic(err)
 	}
-	defer f.Close()
+	//defer f.Close()
 
 	//n, err := f.Write([]byte("writing some data into a file"))
 	// if err != nil {
@@ -76,6 +79,24 @@ func main() {
 		fmt.Println("fillOutEndorsementPdf failed :", err)
 		panic(err)
 	}
+	f.Close()
+
+	// test set protection
+	// templateFile2 := targetFile
+	// data2, err := os.ReadFile(templateFile2)
+	// if err != nil {
+	// 	fmt.Println("Load ", templateFile, " failed :", err)
+	// 	return
+	// }
+	// targetFile2 := path + "/temp/endorsement_mod_protect.pdf"
+	// f2, err := os.OpenFile(targetFile2, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0600)
+	// if err != nil {
+	// 	fmt.Println("Open ", targetFile, " failed :", err)
+	// 	panic(err)
+	// }
+	// defer f2.Close()
+
+	// setProtection(data2, f2)
 }
 
 func convertImageForPdf(signatureS3Bytes []byte, name string, containerX, containerWidth, containerHeight float64) (io.Reader, string, string, float64, error) {
@@ -133,11 +154,11 @@ func fillOutEndorsementPdf(pdfTemplate []byte, effectiveDate, currentVersion str
 
 		tpl := imp.ImportPageFromStream(pdf, &rs, i, "/MediaBox")
 
-		pdf.AddPageFormat("P", sizeType)
+		//pdf.AddPageFormat("P", sizeType)
 		imp.UseImportedTemplate(pdf, tpl, 0, 0, pageSizes[i]["/MediaBox"]["w"], pageSizes[i]["/MediaBox"]["h"])
 
 		// 	if i == 9 {
-		// 		// EffectiveDate
+		// EffectiveDate
 		pdf.SetDrawColor(255, 0, 0)
 		pdf.SetLineWidth(1)
 		pdf.Rect(217, 620, 255, 12, "D")
@@ -178,4 +199,52 @@ func fillOutEndorsementPdf(pdfTemplate []byte, effectiveDate, currentVersion str
 	pdf.Close()
 
 	return nil
+}
+
+func setProtection(pdfTemplate []byte, w io.Writer) error {
+	pdf := gofpdf.New("P", "mm", "A4", "")
+	pdf.SetMargins(0, 0, 0)
+	pdf.SetAutoPageBreak(false, 0)
+
+	// convert []byte to io.ReadSeeker
+	rs := io.ReadSeeker(bytes.NewReader(pdfTemplate))
+
+	// create a new Importer instance
+	imp := gofpdi.NewImporter()
+	pages := imp.GetPageSizes()
+	for i := 1; i <= pdf.PageCount(); i++ {
+		var sizeType gofpdf.SizeType
+		sizeType.Wd = pages[i]["/MediaBox"]["w"]
+		sizeType.Ht = pages[i]["/MediaBox"]["h"]
+
+		tpl := imp.ImportPageFromStream(pdf, &rs, i, "/MediaBox")
+		imp.UseImportedTemplate(pdf, tpl, 0, 0, pages[i]["/MediaBox"]["w"], pages[i]["/MediaBox"]["h"])
+	}
+	// Protect PDF
+	pdf.SetProtection(gofpdf.CnProtectPrint|gofpdf.CnProtectModify, "123456789", "mtlfit")
+
+	if err := pdf.Output(w); err != nil {
+		return err
+	}
+	pdf.Close()
+
+	return nil
+}
+
+func encryptPdfFile(password string, input []byte) ([]byte, error) {
+	var output []byte
+
+	var buffer bytes.Buffer
+	writer := io.Writer(&buffer)
+
+	// conf := pdfcpu.NewAESConfiguration(password, "mtlfit", 256)
+	// err := api.Validate(bytes.NewReader(input), &pdfcpu.Configuration{ValidationMode: pdfcpu.ValidationStrict, Reader15: true})
+	err := api.Encrypt(bytes.NewReader(input), writer, &pdfcpu.Configuration{UserPW: password, OwnerPW: "mtlFit", EncryptUsingAES: true, EncryptKeyLength: 256, Reader15: true, ValidationMode: pdfcpu.ValidationRelaxed})
+	if err != nil {
+		return output, err
+	}
+
+	output = buffer.Bytes()
+
+	return output, nil
 }
